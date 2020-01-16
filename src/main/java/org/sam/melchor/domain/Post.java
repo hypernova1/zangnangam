@@ -1,6 +1,7 @@
 package org.sam.melchor.domain;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -21,8 +22,8 @@ public class Post {
     @Lob
     private String content;
 
-//    @NotBlank
-//    @ManyToOne
-//    private Account writer;
+    @NonNull
+    @ManyToOne
+    private Account writer;
 
 }

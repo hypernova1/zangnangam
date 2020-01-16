@@ -1,13 +1,14 @@
 package org.sam.melchor.domain;
 
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.sam.melchor.domain.audit.DateAudit;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+@Entity
+@Getter @Setter
 public class Comment extends DateAudit {
 
     @Id
