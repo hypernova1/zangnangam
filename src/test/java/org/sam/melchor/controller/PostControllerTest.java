@@ -1,5 +1,6 @@
 package org.sam.melchor.controller;
 
+import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,8 +13,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,14 +49,31 @@ class PostControllerTest {
             post.setContent("post" + i);
             post.setTitle("title" + i);
             post.setWriter(account);
+            post.setLikeCnt(i);
             postRepository.save(post);
         }
     }
 
 
     @Test
-    public void getPostList() {
+    public void getPostList() throws Exception {
+        mockMvc.perform(get("/post/list"))
+                .andExpect(jsonPath("$.content", hasSize(10)));
+    }
 
+    @Test
+    public void getPostListWithTitle() throws Exception {
+        mockMvc.perform(get("/post/list")
+                        .param("title", "title0"))
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void getPostGraterThanLike() throws Exception {
+
+        mockMvc.perform(get("/post/list")
+                        .param("likesGreaterThan", "8"))
+                .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
 }

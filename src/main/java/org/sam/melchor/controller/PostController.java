@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,11 +26,15 @@ public class PostController {
     private PostRepository postRepository;
 
     @GetMapping("/post/list")
-    public ResponseEntity<Page<Post>> getPostList(Map<String, Object> searchRequest,
+    public ResponseEntity<Page<Post>> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "10") int size) {
 
         Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
+
+        for (String key : searchRequest.keySet()) {
+            searchKeys.put(PostSpecs.SearchKey.valueOf(key.toUpperCase()), searchRequest.get(key));
+        }
 
         Page<Post> posts = searchRequest.isEmpty()
                 ? this.postRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id"))

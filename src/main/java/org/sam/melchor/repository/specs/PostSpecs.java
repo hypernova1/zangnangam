@@ -15,7 +15,7 @@ public class PostSpecs {
     public enum SearchKey {
         TITLE("title"),
         WRITER("writer"),
-        LIKESGREATERTHAN("likes");
+        LIKESGREATERTHAN("likeCnt");
 
         private final String value;
 

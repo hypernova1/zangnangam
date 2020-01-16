@@ -7,9 +7,10 @@ import org.sam.melchor.domain.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 @Getter @Setter
 public class Account extends DateAudit {
 
@@ -28,5 +29,13 @@ public class Account extends DateAudit {
 
     @NotBlank
     private String password;
+
+    @OneToMany(mappedBy = "writer")
+    private List<Post> posts = new ArrayList<>();
+
+    public void addPost(Post post) {
+        post.setWriter(this);
+        posts.add(post);
+    }
 
 }
