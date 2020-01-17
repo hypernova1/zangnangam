@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import org.sam.melchor.domain.audit.DateAudit;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Account extends DateAudit {
 
     @Length(max = 30)
     @NotBlank
+    @Email(message = "이메일 형식이 맞지 않습니다.")
     @Column(unique = true)
     private String email;
 

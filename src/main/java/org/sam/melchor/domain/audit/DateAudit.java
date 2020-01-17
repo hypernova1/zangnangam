@@ -1,5 +1,6 @@
 package org.sam.melchor.domain.audit;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,7 @@ public abstract class DateAudit {
     private Instant created;
 
     @LastModifiedDate
+    @JsonIgnore
     private Instant updated;
 
 }

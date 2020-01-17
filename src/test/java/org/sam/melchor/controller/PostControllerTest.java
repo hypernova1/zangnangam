@@ -5,21 +5,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.sam.melchor.domain.Account;
+import org.sam.melchor.domain.Comment;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.repository.AccountRepository;
+import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -35,6 +34,10 @@ class PostControllerTest {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
     @BeforeAll
     public void addData() {
 
@@ -52,8 +55,13 @@ class PostControllerTest {
             post.setLikeCnt(i);
             postRepository.save(post);
         }
-    }
 
+        Comment comment = new Comment();
+        comment.setWriter(account);
+        comment.setPost(postRepository.findById(11L).orElse(new Post()));
+        commentRepository.save(comment);
+
+    }
 
     @Test
     public void getPostList() throws Exception {
@@ -73,7 +81,8 @@ class PostControllerTest {
 
         mockMvc.perform(get("/post/list")
                         .param("likesGreaterThan", "8"))
-                .andExpect(jsonPath("$.content", hasSize(1)));
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andDo(print());
     }
 
 }
