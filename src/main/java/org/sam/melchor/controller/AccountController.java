@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,6 +37,14 @@ public class AccountController {
         Boolean result = accountRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping
+    public ResponseEntity<Account> modifyAccount(@Valid @RequestBody Account account) {
+
+        accountRepository.save(account);
+
+        return ResponseEntity.ok(account);
     }
 
 }

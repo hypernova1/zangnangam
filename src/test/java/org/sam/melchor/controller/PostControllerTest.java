@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -82,6 +83,14 @@ class PostControllerTest {
         mockMvc.perform(get("/post/list")
                         .param("likesGreaterThan", "8"))
                 .andExpect(jsonPath("$.content", hasSize(1)))
+                .andDo(print());
+    }
+
+    @Test
+    public void getPostView() throws Exception {
+
+        mockMvc.perform(get("/post/1"))
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
