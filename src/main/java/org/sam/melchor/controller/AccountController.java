@@ -2,13 +2,16 @@ package org.sam.melchor.controller;
 
 import lombok.AllArgsConstructor;
 import org.sam.melchor.domain.Account;
+import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.payload.LoginRequest;
+import org.sam.melchor.payload.LoginResponse;
 import org.sam.melchor.repository.AccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,19 +35,25 @@ public class AccountController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<Boolean> signin(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> signin(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Boolean result = accountRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+        Optional<Account> result = accountRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 
-        return ResponseEntity.ok(result);
+        Account account = result.orElseThrow(() -> new AccountNotFoundException(loginRequest.getEmail()));
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setEmail(account.getEmail());
+        loginResponse.setName(account.getName());
+
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PutMapping
     public ResponseEntity<Account> modifyAccount(@Valid @RequestBody Account account) {
 
-        accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
 
-        return ResponseEntity.ok(account);
+        return ResponseEntity.ok(savedAccount);
     }
 
 }
