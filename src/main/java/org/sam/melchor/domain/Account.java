@@ -1,5 +1,6 @@
 package org.sam.melchor.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -33,6 +34,7 @@ public class Account extends DateAudit {
     private String password;
 
     @OneToMany(mappedBy = "writer")
+    @JsonManagedReference
     private List<Post> posts = new ArrayList<>();
 
     public void addPost(Post post) {

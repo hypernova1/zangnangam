@@ -1,6 +1,7 @@
 package org.sam.melchor.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class Post {
     private Account writer;
 
     @OneToMany(mappedBy = "post")
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     private Integer likeCnt;

@@ -67,7 +67,8 @@ class PostControllerTest {
     @Test
     public void getPostList() throws Exception {
         mockMvc.perform(get("/post/list"))
-                .andExpect(jsonPath("$.content", hasSize(10)));
+                .andExpect(jsonPath("$.content", hasSize(10)))
+                .andDo(print());
     }
 
     @Test
