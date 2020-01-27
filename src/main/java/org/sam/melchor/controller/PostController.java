@@ -1,8 +1,11 @@
 package org.sam.melchor.controller;
 
 import lombok.AllArgsConstructor;
+import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
+import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
+import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.sam.melchor.repository.specs.PostSpecs;
 import org.springframework.data.domain.Page;
@@ -19,26 +22,31 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/post")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class PostController {
 
     private PostRepository postRepository;
+    private CategoryRepository categoryRepository;
 
-    @GetMapping("/list")
+    @GetMapping("{category}/{page}")
     public ResponseEntity<Page<Post>> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size) {
+                                                  @PathVariable String category,
+                                                  @PathVariable int page,
+                                                  @RequestParam(defaultValue = "10") int size
+                                                  ) {
 
         Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
 
         for (String key : searchRequest.keySet()) {
             searchKeys.put(PostSpecs.SearchKey.valueOf(key.toUpperCase()), searchRequest.get(key));
         }
+        Category byPath = categoryRepository.findByPath(category)
+                .orElseThrow(() -> new CategoryNotFoundException(category));
 
         Page<Post> posts = searchRequest.isEmpty()
-                ? this.postRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "id"))
-                : this.postRepository.findAll(PostSpecs.searchWith(searchKeys), PageRequest.of(page, size, Sort.Direction.DESC, "id"));
+                ? this.postRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
+                : this.postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
         return ResponseEntity.ok(posts);
     }
 
