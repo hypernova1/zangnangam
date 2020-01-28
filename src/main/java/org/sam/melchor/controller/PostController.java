@@ -53,11 +53,11 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
 
-        Post savedPost = postRepository.save(post);
+    Post savedPost = postRepository.save(post);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedPost.getId()).toUri();
+    URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest().path("/{id}")
+            .buildAndExpand(savedPost.getId()).toUri();
 
         return ResponseEntity.created(location).body(savedPost);
     }
