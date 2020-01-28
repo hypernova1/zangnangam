@@ -5,6 +5,7 @@ import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
+import org.sam.melchor.payload.PostListResponse;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.sam.melchor.repository.specs.PostSpecs;
@@ -30,24 +31,26 @@ public class PostController {
     private CategoryRepository categoryRepository;
 
     @GetMapping("{category}/{page}")
-    public ResponseEntity<Page<Post>> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
+    public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
                                                   @PathVariable String category,
                                                   @PathVariable int page,
                                                   @RequestParam(defaultValue = "10") int size
                                                   ) {
 
-        Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
+        /*Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
 
         for (String key : searchRequest.keySet()) {
             searchKeys.put(PostSpecs.SearchKey.valueOf(key.toUpperCase()), searchRequest.get(key));
-        }
+        }*/
         Category byPath = categoryRepository.findByPath(category)
                 .orElseThrow(() -> new CategoryNotFoundException(category));
+        Page<Post> posts = postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
 
-        Page<Post> posts = searchRequest.isEmpty()
-                ? this.postRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
-                : this.postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
-        return ResponseEntity.ok(posts);
+        PostListResponse response = new PostListResponse();
+        response.setCategoryName(byPath.getName());
+        response.setPostList(posts.getContent());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

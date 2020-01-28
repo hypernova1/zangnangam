@@ -31,11 +31,9 @@ public class Post {
 
     @NonNull
     @ManyToOne
-    @JsonBackReference
     private Account writer;
 
     @OneToMany(mappedBy = "post")
-    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     private Integer likeCnt;

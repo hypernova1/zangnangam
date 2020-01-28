@@ -25,11 +25,9 @@ public class Comment extends DateAudit {
 
     @ManyToOne
     @NotNull
-    @JsonBackReference
     private Account writer;
 
     @ManyToOne
     @NotNull
-    @JsonBackReference
     private Post post;
 }
