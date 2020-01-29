@@ -30,10 +30,10 @@ public class PostController {
     private PostRepository postRepository;
     private CategoryRepository categoryRepository;
 
-    @GetMapping("{category}/{page}")
+    @GetMapping("/{category}")
     public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
                                                   @PathVariable String category,
-                                                  @PathVariable int page,
+                                                  @RequestParam int page,
                                                   @RequestParam(defaultValue = "10") int size
                                                   ) {
 
@@ -49,16 +49,21 @@ public class PostController {
         PostListResponse response = new PostListResponse();
         response.setCategoryName(byPath.getName());
         response.setPostList(posts.getContent());
+        response.setNext(posts.hasNext());
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Post> viewDetail(@PathVariable Long id) {
+    @GetMapping("/{categoryPath}/{id}")
+    public ResponseEntity<Post> getPostDetail(@PathVariable String categoryPath,
+                                              @PathVariable Long id) {
 
-        Optional<Post> byId = postRepository.findById(id);
+        Category byPath = categoryRepository.findByPath(categoryPath)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
 
-        return ResponseEntity.ok(byId.orElseThrow(() -> new PostNotFoundException(id)));
+        Post byId = postRepository.findByCategoryAndId(byPath, id)
+                .orElseThrow(() -> new PostNotFoundException(id));
+        return ResponseEntity.ok(byId);
     }
 
     @PostMapping

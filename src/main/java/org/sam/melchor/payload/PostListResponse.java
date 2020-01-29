@@ -10,9 +10,11 @@ import java.util.List;
 @Getter @Setter
 public class PostListResponse {
 
-    String categoryName;
+    private String categoryName;
 
-    List<Post> postList;
+    private List<Post> postList;
+
+    private boolean isNext;
 
     public void setPostList(List<Post> postList) {
         List<Post> newPostList = new ArrayList<>();
