@@ -1,6 +1,7 @@
 package org.sam.melchor.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -29,5 +30,6 @@ public class Comment extends DateAudit {
 
     @ManyToOne
     @NotNull
+    @JsonIgnore
     private Post post;
 }

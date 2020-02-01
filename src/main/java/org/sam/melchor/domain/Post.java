@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.sam.melchor.domain.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Post {
+public class Post extends DateAudit {
 
     @Id
     @GeneratedValue
