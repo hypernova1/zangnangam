@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.sam.melchor.domain.audit.DateAudit;
+import org.sam.melchor.payload.PostRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -42,6 +43,15 @@ public class Post extends DateAudit {
     public void addComment(Comment comment) {
         comment.setPost(this);
         comments.add(comment);
+    }
+
+    public static Post setPost(PostRequest postRequest, Account account, Category category) {
+        Post post = new Post();
+        post.setCategory(category);
+        post.setTitle(postRequest.getTitle());
+        post.setContent(postRequest.getContent());
+        post.setWriter(account);
+        return post;
     }
 
 }
