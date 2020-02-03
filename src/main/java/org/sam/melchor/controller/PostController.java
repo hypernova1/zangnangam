@@ -1,10 +1,15 @@
 package org.sam.melchor.controller;
 
 import lombok.AllArgsConstructor;
+import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
+import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
+import org.sam.melchor.payload.PostListResponse;
+import org.sam.melchor.payload.PostRequest;
+import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.sam.melchor.repository.specs.PostSpecs;
@@ -28,40 +33,55 @@ public class PostController {
 
     private PostRepository postRepository;
     private CategoryRepository categoryRepository;
+    private AccountRepository accountRepository;
 
-    @GetMapping("{category}/{page}")
-    public ResponseEntity<Page<Post>> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
+    @GetMapping("/{category}")
+    public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
                                                   @PathVariable String category,
-                                                  @PathVariable int page,
+                                                  @RequestParam int page,
                                                   @RequestParam(defaultValue = "10") int size
                                                   ) {
 
-        Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
+        /*Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
 
         for (String key : searchRequest.keySet()) {
             searchKeys.put(PostSpecs.SearchKey.valueOf(key.toUpperCase()), searchRequest.get(key));
-        }
+        }*/
         Category byPath = categoryRepository.findByPath(category)
                 .orElseThrow(() -> new CategoryNotFoundException(category));
+        Page<Post> posts = postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
 
-        Page<Post> posts = searchRequest.isEmpty()
-                ? this.postRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"))
-                : this.postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
-        return ResponseEntity.ok(posts);
+        PostListResponse response = new PostListResponse();
+        response.setCategoryName(byPath.getName());
+        response.setPostList(posts.getContent());
+        response.setNext(posts.hasNext());
+
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Post> viewDetail(@PathVariable Long id) {
+    @GetMapping("/{categoryPath}/{id}")
+    public ResponseEntity<Post> getPostDetail(@PathVariable String categoryPath,
+                                              @PathVariable Long id) {
 
-        Optional<Post> byId = postRepository.findById(id);
+        Category byPath = categoryRepository.findByPath(categoryPath)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
 
-        return ResponseEntity.ok(byId.orElseThrow(() -> new PostNotFoundException(id)));
+        Post byId = postRepository.findByCategoryAndId(byPath, id)
+                .orElseThrow(() -> new PostNotFoundException(id));
+        return ResponseEntity.ok(byId);
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
+    @PostMapping("/post")
+    public ResponseEntity<Post> createPost(@Valid @RequestBody PostRequest postRequest) {
 
-    Post savedPost = postRepository.save(post);
+        Category category = categoryRepository.findById(postRequest.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(postRequest.getCategory()));
+
+        Account account = accountRepository.findByEmail(postRequest.getWriter())
+                .orElseThrow(() -> new AccountNotFoundException(postRequest.getWriter()));
+
+        Post post = Post.setPost(postRequest, account, category);
+        Post savedPost = postRepository.save(post);
 
     URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
@@ -70,8 +90,9 @@ public class PostController {
         return ResponseEntity.created(location).body(savedPost);
     }
 
-    @PutMapping
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post) {
+    @PutMapping("post/{id}")
+    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post,
+                                           @PathVariable Long id) {
         Post savedPost = postRepository.save(post);
         return ResponseEntity.ok(savedPost);
     }

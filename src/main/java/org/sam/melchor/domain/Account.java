@@ -1,5 +1,7 @@
 package org.sam.melchor.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +36,7 @@ public class Account extends DateAudit {
     private String password;
 
     @OneToMany(mappedBy = "writer")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
     public void addPost(Post post) {

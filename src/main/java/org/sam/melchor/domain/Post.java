@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.sam.melchor.domain.audit.DateAudit;
+import org.sam.melchor.payload.PostRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Post {
+public class Post extends DateAudit {
 
     @Id
     @GeneratedValue
@@ -31,11 +33,9 @@ public class Post {
 
     @NonNull
     @ManyToOne
-    @JsonBackReference
     private Account writer;
 
     @OneToMany(mappedBy = "post")
-    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     private Integer likeCnt;
@@ -43,6 +43,15 @@ public class Post {
     public void addComment(Comment comment) {
         comment.setPost(this);
         comments.add(comment);
+    }
+
+    public static Post setPost(PostRequest postRequest, Account account, Category category) {
+        Post post = new Post();
+        post.setCategory(category);
+        post.setTitle(postRequest.getTitle());
+        post.setContent(postRequest.getContent());
+        post.setWriter(account);
+        return post;
     }
 
 }

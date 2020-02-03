@@ -2,9 +2,11 @@ package org.sam.melchor;
 
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
+import org.sam.melchor.domain.Comment;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
+import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +28,8 @@ public class Application {
 	@Bean
 	CommandLineRunner insertDB(AccountRepository accountRepository,
 							   CategoryRepository categoryRepository,
-							   PostRepository postRepository) {
+							   PostRepository postRepository,
+							   CommentRepository commentRepository) {
 		return args -> {
 			Account account = new Account();
 			account.setEmail("chtlstjd01@gmail.com");
@@ -55,7 +58,17 @@ public class Application {
 				post.setWriter(account);
 				post.setLikeCnt(0);
 				postRepository.save(post);
+
+				for (int j = 0; j < 5; j++) {
+					Comment comment = new Comment();
+					comment.setComment("Comment" + j);
+					comment.setWriter(account);
+					comment.setPost(post);
+					commentRepository.save(comment);
+				}
 			}
+
+
 
 		};
 	}
