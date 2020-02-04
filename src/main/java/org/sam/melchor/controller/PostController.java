@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -71,27 +72,49 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<Post> createPost(@Valid @RequestBody PostRequest postRequest) {
 
-        Category category = categoryRepository.findById(postRequest.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(postRequest.getCategory()));
+        Post post = makePost(postRequest);
 
-        Account account = accountRepository.findByEmail(postRequest.getWriter())
-                .orElseThrow(() -> new AccountNotFoundException(postRequest.getWriter()));
-
-        Post post = Post.setPost(postRequest, account, category);
         Post savedPost = postRepository.save(post);
 
-    URI location = ServletUriComponentsBuilder
+        URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
             .buildAndExpand(savedPost.getId()).toUri();
 
         return ResponseEntity.created(location).body(savedPost);
     }
 
-    @PutMapping("post/{id}")
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post,
+    @PutMapping("/post/{id}")
+    public ResponseEntity<Post> updatePost(@Valid @RequestBody PostRequest postRequest,
                                            @PathVariable Long id) {
+        postRequest.setId(id);
+        Post post = makePost(postRequest);
+
         Post savedPost = postRepository.save(post);
+
         return ResponseEntity.ok(savedPost);
+    }
+
+    private Post makePost(PostRequest postRequest) {
+
+        Category category = categoryRepository.findById(postRequest.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(postRequest.getCategory()));
+
+        Account account = accountRepository.findByEmail(postRequest.getWriter())
+                .orElseThrow(() -> new AccountNotFoundException(postRequest.getWriter()));
+
+        Post post = null;
+
+        if (StringUtils.isEmpty(postRequest.getId())) {
+            post = Post.setPost(postRequest, account, category);
+            return post;
+        }
+
+        post = postRepository.findById(postRequest.getId())
+                .orElseThrow(() -> new PostNotFoundException(postRequest.getId()));
+
+        Post.setPost(post, postRequest, account, category);
+
+        return post;
     }
 
 }

@@ -52,4 +52,12 @@ public class Post extends DateAudit {
         return post;
     }
 
+    public static Post setPost(Post post, PostRequest postRequest, Account account, Category category) {
+        post.setCategory(category);
+        post.setTitle(postRequest.getTitle());
+        post.setContent(postRequest.getContent());
+        post.setWriter(account);
+        return post;
+    }
+
 }
