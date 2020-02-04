@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -61,14 +60,12 @@ public class Application {
 
 				for (int j = 0; j < 5; j++) {
 					Comment comment = new Comment();
-					comment.setComment("Comment" + j);
+					comment.setContent("Comment" + j);
 					comment.setWriter(account);
 					comment.setPost(post);
 					commentRepository.save(comment);
 				}
 			}
-
-
 
 		};
 	}
