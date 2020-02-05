@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter @Setter
@@ -12,8 +13,8 @@ public class CommentRequest {
     @NotNull
     private Long postId;
 
-    @NonNull
-    private String category;
+    @NotNull
+    private String categoryPath;
 
     private String email;
 
@@ -21,7 +22,7 @@ public class CommentRequest {
 
     private String nonMemberPwd;
 
-    @NotNull
+    @NotBlank
     private String content;
 
 

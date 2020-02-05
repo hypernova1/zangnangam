@@ -33,9 +33,9 @@ public class PostController {
     private CategoryRepository categoryRepository;
     private AccountRepository accountRepository;
 
-    @GetMapping("/{category}")
+    @GetMapping("/{categoryPath}")
     public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
-                                                  @PathVariable String category,
+                                                  @PathVariable String categoryPath,
                                                   @RequestParam int page,
                                                   @RequestParam(defaultValue = "10") int size
                                                   ) {
@@ -45,8 +45,8 @@ public class PostController {
         for (String key : searchRequest.keySet()) {
             searchKeys.put(PostSpecs.SearchKey.valueOf(key.toUpperCase()), searchRequest.get(key));
         }*/
-        Category byPath = categoryRepository.findByPath(category)
-                .orElseThrow(() -> new CategoryNotFoundException(category));
+        Category byPath = categoryRepository.findByPath(categoryPath)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
         Page<Post> posts = postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
 
         PostListResponse response = new PostListResponse();
@@ -96,8 +96,8 @@ public class PostController {
 
     private Post makePost(PostRequest postRequest) {
 
-        Category category = categoryRepository.findById(postRequest.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(postRequest.getCategory()));
+        Category category = categoryRepository.findById(postRequest.getCategoryId())
+                .orElseThrow(() -> new CategoryNotFoundException(postRequest.getCategoryId()));
 
         Account account = accountRepository.findByEmail(postRequest.getWriter())
                 .orElseThrow(() -> new AccountNotFoundException(postRequest.getWriter()));

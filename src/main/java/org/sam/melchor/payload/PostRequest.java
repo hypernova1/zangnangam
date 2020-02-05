@@ -15,7 +15,7 @@ public class PostRequest {
     @NotBlank(message = "내용은 필수입니다.")
     private String content;
     @NotNull(message = "카테고리는 필수입니다.")
-    private Long category;
+    private Long categoryId;
     @NotBlank(message = "작성자는 필수입니다.")
     private String writer;
 

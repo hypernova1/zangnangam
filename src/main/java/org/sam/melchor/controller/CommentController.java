@@ -39,8 +39,8 @@ public class CommentController {
                     .orElseThrow(() -> new AccountNotFoundException(commentRequest.getEmail()));
         }
 
-        Category category = categoryRepository.findByPath(commentRequest.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(commentRequest.getCategory()));
+        Category category = categoryRepository.findByPath(commentRequest.getCategoryPath())
+                .orElseThrow(() -> new CategoryNotFoundException(commentRequest.getCategoryPath()));
 
         Post post = postRepository.findByCategoryAndId(category, commentRequest.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));
