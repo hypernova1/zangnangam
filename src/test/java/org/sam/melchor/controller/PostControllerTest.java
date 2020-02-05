@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +40,6 @@ class PostControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @BeforeAll
     public void addData() {
 
         Account account = new Account();
@@ -81,18 +81,28 @@ class PostControllerTest {
     @Test
     public void getPostGraterThanLike() throws Exception {
 
-        mockMvc.perform(get("/post/list")
+        mockMvc.perform(get("/java")
+                        .param("page", "1")
                         .param("likesGreaterThan", "8"))
-                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.postList", hasSize(10)))
                 .andDo(print());
     }
 
     @Test
     public void getPostView() throws Exception {
 
-        mockMvc.perform(get("/post/1"))
+        mockMvc.perform(get("/java/1"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
+    }
+
+    @Test
+    public void removePost() throws Exception {
+
+        mockMvc.perform(delete("/post/5")
+                .param("categoryPath", "java"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
 }

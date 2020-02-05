@@ -1,6 +1,6 @@
 package org.sam.melchor.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Comment;
@@ -23,13 +23,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/comment")
 @CrossOrigin("http://localhost:3000")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CommentController {
 
-    private CommentRepository commentRepository;
-    private AccountRepository accountRepository;
-    private CategoryRepository categoryRepository;
-    private PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final AccountRepository accountRepository;
+    private final CategoryRepository categoryRepository;
+    private final PostRepository postRepository;
 
     @PostMapping
     public ResponseEntity<List<Comment>> createComment(@Valid @RequestBody CommentRequest commentRequest) {

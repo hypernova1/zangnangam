@@ -1,6 +1,6 @@
 package org.sam.melchor.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,13 +26,13 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class PostController {
 
-    private PostRepository postRepository;
-    private CategoryRepository categoryRepository;
-    private AccountRepository accountRepository;
+    private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/{categoryPath}")
     public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
@@ -61,12 +62,12 @@ public class PostController {
     public ResponseEntity<Post> getPostDetail(@PathVariable String categoryPath,
                                               @PathVariable Long id) {
 
-        Category byPath = categoryRepository.findByPath(categoryPath)
+        Category category = categoryRepository.findByPath(categoryPath)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
 
-        Post byId = postRepository.findByCategoryAndId(byPath, id)
+        Post post = postRepository.findByCategoryAndId(category, id)
                 .orElseThrow(() -> new PostNotFoundException(id));
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(post);
     }
 
     @PostMapping("/post")
@@ -94,6 +95,23 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
+    @Transactional
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<Boolean> removePost(@PathVariable Long id,
+                                              String categoryPath) {
+
+        Category category = categoryRepository.findByPath(categoryPath)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
+
+        Long removeCnt = postRepository.deleteByIdAndCategory(id, category);
+
+        if (removeCnt == 0) {
+            throw new CategoryNotFoundException(categoryPath);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
     private Post makePost(PostRequest postRequest) {
 
         Category category = categoryRepository.findById(postRequest.getCategoryId())
@@ -105,14 +123,14 @@ public class PostController {
         Post post = null;
 
         if (StringUtils.isEmpty(postRequest.getId())) {
-            post = Post.setPost(postRequest, account, category);
+            post = Post.set(postRequest, account, category);
             return post;
         }
 
         post = postRepository.findById(postRequest.getId())
                 .orElseThrow(() -> new PostNotFoundException(postRequest.getId()));
 
-        Post.setPost(post, postRequest, account, category);
+        Post.modify(post, postRequest, account, category);
 
         return post;
     }

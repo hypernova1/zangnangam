@@ -1,6 +1,6 @@
 package org.sam.melchor.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.payload.LoginRequest;
@@ -15,11 +15,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class AccountController {
 
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/check/{email}")
     public ResponseEntity<Boolean> searchEmail(@PathVariable String email) {

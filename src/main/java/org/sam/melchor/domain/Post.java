@@ -3,6 +3,7 @@ package org.sam.melchor.domain;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.sam.melchor.domain.audit.DateAudit;
 import org.sam.melchor.payload.PostRequest;
 
@@ -33,7 +34,7 @@ public class Post extends DateAudit {
     @ManyToOne
     private Account writer;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     private Integer likeCnt;
@@ -43,7 +44,7 @@ public class Post extends DateAudit {
         comments.add(comment);
     }
 
-    public static Post setPost(PostRequest postRequest, Account account, Category category) {
+    public static Post set(PostRequest postRequest, Account account, Category category) {
         Post post = new Post();
         post.setCategory(category);
         post.setTitle(postRequest.getTitle());
@@ -52,12 +53,11 @@ public class Post extends DateAudit {
         return post;
     }
 
-    public static Post setPost(Post post, PostRequest postRequest, Account account, Category category) {
+    public static void modify(Post post, PostRequest postRequest, Account account, Category category) {
         post.setCategory(category);
         post.setTitle(postRequest.getTitle());
         post.setContent(postRequest.getContent());
         post.setWriter(account);
-        return post;
     }
 
 }
