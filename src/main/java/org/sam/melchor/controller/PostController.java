@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -92,6 +93,23 @@ public class PostController {
         Post savedPost = postRepository.save(post);
 
         return ResponseEntity.ok(savedPost);
+    }
+
+    @Transactional
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<Boolean> removePost(@PathVariable Long id,
+                                              String categoryPath) {
+
+        Category category = categoryRepository.findByPath(categoryPath)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
+
+        Long removeCnt = postRepository.deleteByIdAndCategory(id, category);
+
+        if (removeCnt == 0) {
+            throw new CategoryNotFoundException(categoryPath);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     private Post makePost(PostRequest postRequest) {

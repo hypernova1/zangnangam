@@ -3,6 +3,7 @@ package org.sam.melchor.domain;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.sam.melchor.domain.audit.DateAudit;
 import org.sam.melchor.payload.PostRequest;
 
@@ -33,7 +34,7 @@ public class Post extends DateAudit {
     @ManyToOne
     private Account writer;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     private Integer likeCnt;
