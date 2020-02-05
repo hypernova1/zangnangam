@@ -1,6 +1,6 @@
 package org.sam.melchor.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
@@ -25,13 +25,13 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class PostController {
 
-    private PostRepository postRepository;
-    private CategoryRepository categoryRepository;
-    private AccountRepository accountRepository;
+    private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/{category}")
     public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
@@ -61,12 +61,12 @@ public class PostController {
     public ResponseEntity<Post> getPostDetail(@PathVariable String categoryPath,
                                               @PathVariable Long id) {
 
-        Category byPath = categoryRepository.findByPath(categoryPath)
+        Category category = categoryRepository.findByPath(categoryPath)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
 
-        Post byId = postRepository.findByCategoryAndId(byPath, id)
+        Post post = postRepository.findByCategoryAndId(category, id)
                 .orElseThrow(() -> new PostNotFoundException(id));
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(post);
     }
 
     @PostMapping("/post")
@@ -105,14 +105,14 @@ public class PostController {
         Post post = null;
 
         if (StringUtils.isEmpty(postRequest.getId())) {
-            post = Post.setPost(postRequest, account, category);
+            post = Post.set(postRequest, account, category);
             return post;
         }
 
         post = postRepository.findById(postRequest.getId())
                 .orElseThrow(() -> new PostNotFoundException(postRequest.getId()));
 
-        Post.setPost(post, postRequest, account, category);
+        Post.modify(post, postRequest, account, category);
 
         return post;
     }
