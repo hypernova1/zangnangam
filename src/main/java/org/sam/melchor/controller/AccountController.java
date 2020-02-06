@@ -2,9 +2,13 @@ package org.sam.melchor.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
+import org.sam.melchor.payload.UserSummary;
 import org.sam.melchor.repository.AccountRepository;
+import org.sam.melchor.security.AuthUser;
+import org.sam.melchor.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +36,13 @@ public class AccountController {
         Account savedAccount = accountRepository.save(account);
 
         return ResponseEntity.ok(savedAccount);
+    }
+
+    @GetMapping("/me")
+    @Secured({"IS_AUTHENTICATED_ANONYMOUSLY"})
+    public ResponseEntity<UserSummary> getAuthUser(@AuthUser UserPrincipal authUser) {
+        UserSummary userSummary = new UserSummary(authUser.getId(), authUser.getEmail(), authUser.getUsername());
+        return ResponseEntity.ok(userSummary);
     }
 
 }
