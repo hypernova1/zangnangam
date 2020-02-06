@@ -2,17 +2,16 @@ package org.sam.melchor.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
-import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Comment;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
-import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.payload.CommentRequest;
 import org.sam.melchor.repository.AccountRepository;
-import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;
+import org.sam.melchor.security.AuthUser;
+import org.sam.melchor.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -27,21 +26,24 @@ public class CommentController {
 
     private final CommentRepository commentRepository;
     private final AccountRepository accountRepository;
-    private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
 
     @PostMapping
-    public ResponseEntity<List<Comment>> createComment(@Valid @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<List<Comment>> createComment(@Valid @RequestBody CommentRequest commentRequest,
+                                                       @AuthUser UserPrincipal authUser) {
+
+        if(authUser == null &&
+                (commentRequest.getNonMemberName() == null || commentRequest.getNonMemberPwd() == null)) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Account account = null;
         if (StringUtils.hasText(commentRequest.getEmail())) {
             account = accountRepository.findByEmail(commentRequest.getEmail())
                     .orElseThrow(() -> new AccountNotFoundException(commentRequest.getEmail()));
         }
 
-        Category category = categoryRepository.findByPath(commentRequest.getCategoryPath())
-                .orElseThrow(() -> new CategoryNotFoundException(commentRequest.getCategoryPath()));
-
-        Post post = postRepository.findByCategoryAndId(category, commentRequest.getPostId())
+        Post post = postRepository.findById(commentRequest.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));
 
         Comment comment = Comment.setComment(commentRequest, post, account);
