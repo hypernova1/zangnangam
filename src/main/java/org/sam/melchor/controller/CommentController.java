@@ -22,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comment")
-@CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 public class CommentController {
 

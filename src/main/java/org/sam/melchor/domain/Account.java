@@ -1,8 +1,7 @@
 package org.sam.melchor.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.sam.melchor.domain.audit.DateAudit;
 
@@ -11,9 +10,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account extends DateAudit {
 
     @Id
@@ -37,9 +40,11 @@ public class Account extends DateAudit {
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
+    @ManyToMany
+    private Set<Role> roles;
+
     public void addPost(Post post) {
         post.setWriter(this);
         posts.add(post);
     }
-
 }

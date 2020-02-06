@@ -26,8 +26,8 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/post")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
 public class PostController {
 
     private final PostRepository postRepository;
@@ -70,7 +70,7 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity<Post> createPost(@Valid @RequestBody PostRequest postRequest) {
 
         Post post = makePost(postRequest);
@@ -84,7 +84,7 @@ public class PostController {
         return ResponseEntity.created(location).body(savedPost);
     }
 
-    @PutMapping("/post/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@Valid @RequestBody PostRequest postRequest,
                                            @PathVariable Long id) {
         postRequest.setId(id);
@@ -96,7 +96,7 @@ public class PostController {
     }
 
     @Transactional
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> removePost(@PathVariable Long id,
                                               String categoryPath) {
 
