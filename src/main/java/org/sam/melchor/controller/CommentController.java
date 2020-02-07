@@ -1,10 +1,12 @@
 package org.sam.melchor.controller;
 
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Comment;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
+import org.sam.melchor.exception.CommentNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.payload.CommentRequest;
 import org.sam.melchor.repository.AccountRepository;
@@ -47,7 +49,6 @@ public class CommentController {
                 .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));
 
         Comment comment = Comment.setComment(commentRequest, post, account);
-
         commentRepository.save(comment);
 
         List<Comment> Comments = commentRepository.findAllByPostId(commentRequest.getPostId());
@@ -56,16 +57,27 @@ public class CommentController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Comment> updateComment(@Valid @RequestBody Comment comment,
-                                                 @PathVariable Long id) {
-        Comment savedComment = commentRepository.save(comment);
-        return ResponseEntity.ok(savedComment);
+    public ResponseEntity<?> updateComment(@PathVariable Long id,
+                                           @Valid @RequestBody CommentRequest commentRequest) {
+
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(id));
+
+        comment.setContent(commentRequest.getContent());
+
+        commentRepository.save(comment);
+
+        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
+
+        return ResponseEntity.ok(commentList);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<?> deleteComment(@PathVariable Long id,
+                                           @Valid @RequestBody CommentRequest commentRequest) {
         commentRepository.deleteById(id);
-        return ResponseEntity.ok(Boolean.TRUE);
+        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
+        return ResponseEntity.ok(commentList);
     }
 
 }

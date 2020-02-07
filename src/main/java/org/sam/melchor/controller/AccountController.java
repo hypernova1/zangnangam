@@ -21,11 +21,11 @@ public class AccountController {
     private final AccountRepository accountRepository;
 
     @GetMapping("/check_email/{email}")
-    public ResponseEntity<Boolean> searchEmail(@PathVariable String email) {
+    public ResponseEntity<?> searchEmail(@PathVariable String email) {
         if (accountRepository.existsByEmail(email)) {
-            return new ResponseEntity<>(Boolean.FALSE, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.ok(Boolean.TRUE);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{email}")
