@@ -27,9 +27,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        securedEnabled = true,  //@Secured : ROLE 확인 (여러개 가능)
-        jsr250Enabled = true,   //@RolesAllowed : ROLE 확인 (하나만)
-        prePostEnabled = true   //@PreAuthorize : ROLE 확인 (정규식 사용 가능)
+        securedEnabled = true,  //@Secured
+        jsr250Enabled = true,   //@RolesAllowed
+        prePostEnabled = true   //@PreAuthorize
 )
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

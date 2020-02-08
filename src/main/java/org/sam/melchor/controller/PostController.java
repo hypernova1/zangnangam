@@ -12,6 +12,8 @@ import org.sam.melchor.payload.PostRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
+import org.sam.melchor.security.AuthUser;
+import org.sam.melchor.security.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -98,17 +100,13 @@ public class PostController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> removePost(@PathVariable Long id,
-                                              String categoryPath) {
+                                              @AuthUser UserPrincipal userPrincipal) {
 
-        Category category = categoryRepository.findByPath(categoryPath)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
+        Account writer = accountRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new AccountNotFoundException(userPrincipal.getEmail()));
+        Long removeCnt = postRepository.deleteByIdAndWriter(id, writer);
 
-        Long removeCnt = postRepository.deleteByIdAndCategory(id, category);
-
-        if (removeCnt == 0) {
-            throw new CategoryNotFoundException(categoryPath);
-        }
-
+        if (removeCnt == 0) throw new PostNotFoundException(id);
         return ResponseEntity.ok().build();
     }
 
@@ -127,7 +125,7 @@ public class PostController {
             return post;
         }
 
-        post = postRepository.findById(postRequest.getId())
+        post = postRepository.findByIdAndWriter(postRequest.getId(), account)
                 .orElseThrow(() -> new PostNotFoundException(postRequest.getId()));
 
         Post.modify(post, postRequest, account, category);

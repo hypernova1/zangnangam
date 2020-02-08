@@ -1,6 +1,5 @@
 package org.sam.melchor.controller;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Comment;
@@ -15,9 +14,11 @@ import org.sam.melchor.repository.PostRepository;
 import org.sam.melchor.security.AuthUser;
 import org.sam.melchor.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -38,7 +39,6 @@ public class CommentController {
                 (commentRequest.getNonMemberName() == null || commentRequest.getNonMemberPwd() == null)) {
             return ResponseEntity.badRequest().build();
         }
-
         Account account = null;
         if (StringUtils.hasText(commentRequest.getEmail())) {
             account = accountRepository.findByEmail(commentRequest.getEmail())
@@ -56,6 +56,21 @@ public class CommentController {
         return ResponseEntity.ok(Comments);
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteComment(@PathVariable Long id,
+                                           @Valid @RequestBody CommentRequest commentRequest,
+                                           @AuthUser UserPrincipal userPrincipal) {
+
+        Account writer = accountRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new AccountNotFoundException(userPrincipal.getEmail()));
+
+        commentRepository.deleteByIdAndWriter(id, writer);
+        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
+        return ResponseEntity.ok(commentList);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<?> updateComment(@PathVariable Long id,
                                            @Valid @RequestBody CommentRequest commentRequest) {
@@ -69,14 +84,6 @@ public class CommentController {
 
         List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
 
-        return ResponseEntity.ok(commentList);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long id,
-                                           @Valid @RequestBody CommentRequest commentRequest) {
-        commentRepository.deleteById(id);
-        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
         return ResponseEntity.ok(commentList);
     }
 
