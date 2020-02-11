@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter
 public class CommentRequest {
 
+    @NotNull
     private Long postId;
 
     private String email;
@@ -18,6 +19,7 @@ public class CommentRequest {
 
     private String nonMemberPwd;
 
+    @NotBlank
     private String content;
 
 }

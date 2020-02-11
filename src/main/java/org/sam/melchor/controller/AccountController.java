@@ -41,7 +41,15 @@ public class AccountController {
     @GetMapping("/me")
     @Secured({"IS_AUTHENTICATED_ANONYMOUSLY"})
     public ResponseEntity<UserSummary> getAuthUser(@AuthUser UserPrincipal authUser) {
-        UserSummary userSummary = new UserSummary(authUser.getId(), authUser.getEmail(), authUser.getUsername());
+        boolean isAdmin = authUser.getAuthorities().stream()
+                .anyMatch((auth) -> auth.getAuthority().contains("ADMIN"));
+        String role;
+        if (isAdmin) {
+            role = "admin";
+        } else {
+            role = "user";
+        }
+        UserSummary userSummary = new UserSummary(authUser.getId(), authUser.getEmail(), authUser.getUsername(), role);
         return ResponseEntity.ok(userSummary);
     }
 
