@@ -47,14 +47,20 @@ public class Application {
 			accountRepository.save(account);
 
 			Category category1 = new Category();
+			category1.setOrderNo(0);
 			category1.setName("자바");
 			category1.setPath("java");
+			category1.setRole("all");
 			Category category2 = new Category();
+			category2.setOrderNo(1);
 			category2.setName("자바스크립트");
 			category2.setPath("js");
+			category2.setRole("all");
 			Category category3 = new Category();
+			category3.setOrderNo(2);
 			category3.setName("DB");
 			category3.setPath("db");
+			category3.setRole("all");
 
 			categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
 
