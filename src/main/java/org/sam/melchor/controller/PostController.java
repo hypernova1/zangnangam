@@ -7,7 +7,9 @@ import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
-import org.sam.melchor.payload.PostListResponse;
+import org.sam.melchor.payload.CommentsResponse;
+import org.sam.melchor.payload.PostResponse;
+import org.sam.melchor.payload.PostsResponse;
 import org.sam.melchor.payload.PostRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
@@ -37,10 +39,10 @@ public class PostController {
     private final AccountRepository accountRepository;
 
     @GetMapping("/{categoryPath}")
-    public ResponseEntity<PostListResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
-                                                  @PathVariable String categoryPath,
-                                                  @RequestParam int page,
-                                                  @RequestParam(defaultValue = "10") int size
+    public ResponseEntity<PostsResponse> getPostList(@RequestParam(required = false) Map<String, Object> searchRequest,
+                                                     @PathVariable String categoryPath,
+                                                     @RequestParam int page,
+                                                     @RequestParam(defaultValue = "10") int size
                                                   ) {
 
         /*Map<PostSpecs.SearchKey, Object> searchKeys = new HashMap<>();
@@ -52,16 +54,16 @@ public class PostController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryPath));
         Page<Post> posts = postRepository.findByCategoryId(byPath.getId(), PageRequest.of(page - 1, size, Sort.Direction.DESC, "id"));
 
-        PostListResponse response = new PostListResponse();
+        PostsResponse response = new PostsResponse();
         response.setCategoryName(byPath.getName());
-        response.setPostList(posts.getContent());
+        response.set(posts.getContent());
         response.setNext(posts.hasNext());
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{categoryPath}/{id}")
-    public ResponseEntity<Post> getPostDetail(@PathVariable String categoryPath,
+    public ResponseEntity<?> getPostDetail(@PathVariable String categoryPath,
                                               @PathVariable Long id) {
 
         Category category = categoryRepository.findByPath(categoryPath)
@@ -69,32 +71,38 @@ public class PostController {
 
         Post post = postRepository.findByCategoryAndId(category, id)
                 .orElseThrow(() -> new PostNotFoundException(id));
-        return ResponseEntity.ok(post);
+
+        PostResponse postResponse = getPostResponse(post);
+
+        return ResponseEntity.ok(postResponse);
     }
 
+
+
     @PostMapping
-    public ResponseEntity<Post> createPost(@Valid @RequestBody PostRequest postRequest) {
+    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest) {
 
         Post post = makePost(postRequest);
-
         Post savedPost = postRepository.save(post);
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
             .buildAndExpand(savedPost.getId()).toUri();
 
-        return ResponseEntity.created(location).body(savedPost);
+        PostResponse postResponse = getPostResponse(savedPost);
+
+        return ResponseEntity.created(location).body(postResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody PostRequest postRequest,
+    public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequest postRequest,
                                            @PathVariable Long id) {
         postRequest.setId(id);
         Post post = makePost(postRequest);
 
         Post savedPost = postRepository.save(post);
-
-        return ResponseEntity.ok(savedPost);
+        PostResponse postResponse = getPostResponse(savedPost);
+        return ResponseEntity.ok(postResponse);
     }
 
     @Transactional
@@ -131,6 +139,12 @@ public class PostController {
         Post.modify(post, postRequest, account, category);
 
         return post;
+    }
+
+    private PostResponse getPostResponse(Post post) {
+        PostResponse postResponse = new PostResponse();
+        postResponse.set(post);
+        return postResponse;
     }
 
 }

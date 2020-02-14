@@ -43,12 +43,7 @@ public class AccountController {
     public ResponseEntity<UserSummary> getAuthUser(@AuthUser UserPrincipal authUser) {
         boolean isAdmin = authUser.getAuthorities().stream()
                 .anyMatch((auth) -> auth.getAuthority().contains("ADMIN"));
-        String role;
-        if (isAdmin) {
-            role = "admin";
-        } else {
-            role = "user";
-        }
+        String role = isAdmin ? "admin" : "user";
         UserSummary userSummary = new UserSummary(authUser.getId(), authUser.getEmail(), authUser.getUsername(), role);
         return ResponseEntity.ok(userSummary);
     }

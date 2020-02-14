@@ -34,6 +34,7 @@ public class Account extends DateAudit {
     private String name;
 
     @NotBlank
+    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "writer")

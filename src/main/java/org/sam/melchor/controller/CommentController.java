@@ -7,6 +7,7 @@ import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CommentNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
+import org.sam.melchor.payload.CommentsResponse;
 import org.sam.melchor.payload.CommentRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CommentRepository;
@@ -32,8 +33,8 @@ public class CommentController {
     private final PostRepository postRepository;
 
     @PostMapping
-    public ResponseEntity<List<Comment>> createComment(@Valid @RequestBody CommentRequest commentRequest,
-                                                       @AuthUser UserPrincipal authUser) {
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest,
+                                                               @AuthUser UserPrincipal authUser) {
 
         if(authUser == null &&
                 (commentRequest.getNonMemberName() == null || commentRequest.getNonMemberPwd() == null)) {
@@ -51,10 +52,12 @@ public class CommentController {
         Comment comment = Comment.setComment(commentRequest, post, account);
         commentRepository.save(comment);
 
-        List<Comment> Comments = commentRepository.findAllByPostId(commentRequest.getPostId());
+        CommentsResponse commentsResponse = getCommentsResponse(commentRequest);
 
-        return ResponseEntity.ok(Comments);
+        return ResponseEntity.ok(commentsResponse.getCommentList());
     }
+
+
 
     @DeleteMapping("/{id}")
     @Transactional
@@ -67,8 +70,8 @@ public class CommentController {
                 .orElseThrow(() -> new AccountNotFoundException(userPrincipal.getEmail()));
 
         commentRepository.deleteByIdAndWriter(id, writer);
-        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
-        return ResponseEntity.ok(commentList);
+        CommentsResponse commentsResponse = getCommentsResponse(commentRequest);
+        return ResponseEntity.ok(commentsResponse.getCommentList());
     }
 
     @PutMapping("{id}")
@@ -82,9 +85,16 @@ public class CommentController {
 
         commentRepository.save(comment);
 
-        List<Comment> commentList = commentRepository.findAllByPostId(commentRequest.getPostId());
+        CommentsResponse commentsResponse = getCommentsResponse(commentRequest);
 
-        return ResponseEntity.ok(commentList);
+        return ResponseEntity.ok(commentsResponse.getCommentList());
+    }
+
+    private CommentsResponse getCommentsResponse(@RequestBody @Valid CommentRequest commentRequest) {
+        List<Comment> comments = commentRepository.findAllByPostId(commentRequest.getPostId());
+        CommentsResponse commentsResponse = new CommentsResponse();
+        commentsResponse.set(comments);
+        return commentsResponse;
     }
 
 }
