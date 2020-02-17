@@ -1,0 +1,35 @@
+server:
+  ssl:
+    enabled: true
+    key-store: keystore.p12
+    key-store-password: 111111
+    key-store-type: PKCS12
+    key-alias: zangnangam
+  port: 3300
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/board
+    username: root
+    password: 1111
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwtSecret: MorgothIsMelchor
+  jwtExpirationInMs: 6048000
+
+
+  spring:
+    jpa:
+      properties:
+        hibernate:
+          format_sql: true

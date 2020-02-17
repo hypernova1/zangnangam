@@ -177,3 +177,5 @@ local.properties
 
 src/main/resources/static/
 src/main/resources/templates/
+
+keystore.p12
