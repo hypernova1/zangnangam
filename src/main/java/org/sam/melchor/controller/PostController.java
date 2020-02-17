@@ -77,8 +77,6 @@ public class PostController {
         return ResponseEntity.ok(postResponse);
     }
 
-
-
     @PostMapping
     public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest) {
 
@@ -126,7 +124,7 @@ public class PostController {
         Account account = accountRepository.findByEmail(postRequest.getWriter())
                 .orElseThrow(() -> new AccountNotFoundException(postRequest.getWriter()));
 
-        Post post = null;
+        Post post;
 
         if (StringUtils.isEmpty(postRequest.getId())) {
             post = Post.set(postRequest, account, category);

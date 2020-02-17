@@ -3,6 +3,7 @@ package org.sam.melchor.payload;
 import lombok.Getter;
 import lombok.Setter;
 import org.sam.melchor.domain.Account;
+import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public class PostResponse {
     private String content;
     private Account writer;
     private String created;
+    private Category category;
     private List<CommentResponse> comments;
 
     public void set(Post post) {
@@ -27,6 +29,7 @@ public class PostResponse {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.writer = post.getWriter();
+        this.setCategory(post.getCategory());
         this.created = created;
         CommentsResponse commentsResponse = new CommentsResponse();
         commentsResponse.set(post.getComments());
