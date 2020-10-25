@@ -29,12 +29,10 @@ public class AccountDto {
     @Getter @Setter
     @ToString
     public static class SummaryResponse {
-
         private Long id;
         private String email;
         private String name;
         private String role;
-
     }
 
 }
