@@ -1,8 +1,9 @@
-package org.sam.melchor.controller;
+package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
-import org.sam.melchor.payload.UserSummary;
+import org.sam.melchor.service.AccountService;
+import org.sam.melchor.web.payload.UserSummary;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.security.AuthUser;
 import org.sam.melchor.security.UserPrincipal;
@@ -19,10 +20,11 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     @GetMapping("/check_email/{email}")
     public ResponseEntity<?> searchEmail(@PathVariable String email) {
-        if (accountRepository.existsByEmail(email)) {
+        if (accountService.existsByEmail(email)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok().build();
@@ -32,6 +34,7 @@ public class AccountController {
     public ResponseEntity<Account> modifyAccount(@Valid @RequestBody Account account,
                                                  @PathVariable String email) {
 
+        accountService.update(account, email);
         account.setEmail(email);
         Account savedAccount = accountRepository.save(account);
 

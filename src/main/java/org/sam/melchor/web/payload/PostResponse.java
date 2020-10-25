@@ -1,4 +1,4 @@
-package org.sam.melchor.payload;
+package org.sam.melchor.web.payload;
 
 import lombok.Getter;
 import lombok.Setter;

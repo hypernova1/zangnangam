@@ -26,10 +26,3 @@ spring:
 app:
   jwtSecret: MorgothIsMelchor
   jwtExpirationInMs: 6048000
-
-
-  spring:
-    jpa:
-      properties:
-        hibernate:
-          format_sql: true

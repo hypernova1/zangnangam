@@ -1,7 +1,6 @@
-package org.sam.melchor.payload;
+package org.sam.melchor.web.payload;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;

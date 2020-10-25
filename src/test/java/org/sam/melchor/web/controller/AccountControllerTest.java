@@ -1,4 +1,4 @@
-package org.sam.melchor.controller;
+package org.sam.melchor.web.controller;
 
 import org.junit.jupiter.api.Test;
 import org.sam.melchor.domain.Account;

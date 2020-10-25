@@ -1,4 +1,4 @@
-package org.sam.melchor.controller;
+package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
@@ -7,10 +7,9 @@ import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
-import org.sam.melchor.payload.CommentsResponse;
-import org.sam.melchor.payload.PostResponse;
-import org.sam.melchor.payload.PostsResponse;
-import org.sam.melchor.payload.PostRequest;
+import org.sam.melchor.web.payload.PostResponse;
+import org.sam.melchor.web.payload.PostsResponse;
+import org.sam.melchor.web.payload.PostRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;

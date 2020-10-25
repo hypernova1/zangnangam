@@ -1,4 +1,4 @@
-package org.sam.melchor.controller;
+package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
@@ -7,8 +7,8 @@ import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CommentNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
-import org.sam.melchor.payload.CommentsResponse;
-import org.sam.melchor.payload.CommentRequest;
+import org.sam.melchor.web.payload.CommentsResponse;
+import org.sam.melchor.web.payload.CommentRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;

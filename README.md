@@ -1,10 +1,7 @@
-# Toy Project (or Blog Project)
+# Zangnangam
 
-## 설명  
-블로그 프로젝트입니다.  
-  
 ## 목적  
-실력향상 및 기술 블로그 활용
+Spring Boot 학습 및 기술 블로그 활용
 ## 사용 기술
 Backend: Spring boot, JPA, Spring Security  
 Frontend: React.js (https://github.com/hypernova1/zangnangam-front)  

@@ -3,9 +3,8 @@ package org.sam.melchor.domain;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.sam.melchor.domain.audit.DateAudit;
-import org.sam.melchor.payload.PostRequest;
+import org.sam.melchor.web.payload.PostRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

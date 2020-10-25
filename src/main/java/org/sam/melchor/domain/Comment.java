@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.sam.melchor.domain.audit.DateAudit;
-import org.sam.melchor.payload.CommentRequest;
+import org.sam.melchor.web.payload.CommentRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -48,4 +48,8 @@ public class Account extends DateAudit {
         post.setWriter(this);
         posts.add(post);
     }
+
+    public void update() {
+
+    }
 }

@@ -1,14 +1,14 @@
-package org.sam.melchor.controller;
+package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Role;
 import org.sam.melchor.domain.RoleName;
 import org.sam.melchor.exception.AppException;
-import org.sam.melchor.payload.ApiResponse;
-import org.sam.melchor.payload.JwtAuthenticationResponse;
-import org.sam.melchor.payload.LoginRequest;
-import org.sam.melchor.payload.SignUpRequest;
+import org.sam.melchor.web.controller.payload.ApiResponse;
+import org.sam.melchor.web.payload.JwtAuthenticationResponse;
+import org.sam.melchor.web.payload.LoginRequest;
+import org.sam.melchor.web.payload.SignUpRequest;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.RoleRepository;
 import org.sam.melchor.security.JwtTokenProvider;

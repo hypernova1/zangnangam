@@ -1,4 +1,4 @@
-package org.sam.melchor.payload;
+package org.sam.melchor.web.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
