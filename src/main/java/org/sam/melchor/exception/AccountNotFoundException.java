@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AccountNotFoundException extends RuntimeException {
 
     public AccountNotFoundException(String email) {
-        super(email + " is not found");
+        super(email + " is not found.");
+    }
+
+    public AccountNotFoundException(Long id) {
+        super(id + " is not found.");
     }
 
 }

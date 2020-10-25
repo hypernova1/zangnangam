@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.sam.melchor.domain.audit.DateAudit;
+import org.sam.melchor.web.payload.AccountDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -49,7 +50,8 @@ public class Account extends DateAudit {
         posts.add(post);
     }
 
-    public void update() {
-
+    public void update(AccountDto.UpdateRequest request) {
+        this.name = request.getName();
+        this.password = request.getPassword();
     }
 }
