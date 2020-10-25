@@ -1,8 +1,8 @@
 package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sam.melchor.domain.Category;
-import org.sam.melchor.repository.CategoryRepository;
+import org.sam.melchor.service.CategoryService;
+import org.sam.melchor.web.payload.CategoryDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -15,36 +15,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getCategory() {
-        return ResponseEntity.ok(categoryRepository.findAll());
+    public ResponseEntity<?> getCategory() {
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        return ResponseEntity.ok(categoryList);
     }
 
     @PostMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<Category>> createCategory(@Valid @RequestBody Category category) {
-        categoryRepository.save(category);
-        List<Category> categoryList = categoryRepository.findAll();
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto request) {
+        categoryService.register(request);
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
         return ResponseEntity.ok(categoryList);
     }
 
     @PutMapping("/{id}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<Category>> updateCategory(@Valid @RequestBody Category category,
+    public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDto request,
                                                          @PathVariable Long id) {
-        category.setId(id);
-        categoryRepository.save(category);
-        List<Category> categoryList = categoryRepository.findAll();
+        categoryService.update(id, request);
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
         return ResponseEntity.ok(categoryList);
     }
 
     @DeleteMapping("/{id}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<Category>> deleteCategory(@PathVariable Long id) {
-        categoryRepository.deleteById(id);
-        List<Category> categoryList = categoryRepository.findAll();
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        categoryService.delete(id);
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
         return ResponseEntity.ok(categoryList);
     }
 }

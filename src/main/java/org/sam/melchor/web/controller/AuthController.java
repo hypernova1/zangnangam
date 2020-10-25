@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signIn(@Valid @RequestBody AuthDto.LoginRequest request) {
+    public ResponseEntity<?> signIn(@Valid @RequestBody AuthDto.LoginRequest request) {
 
         String jwt = authService.signIn(request);
 

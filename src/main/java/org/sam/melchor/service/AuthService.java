@@ -36,6 +36,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+    @Transactional
     public AccountDto.SummaryResponse signUp(AuthDto.@Valid SignUpRequest request) {
         Account account = Account.builder()
                 .email(request.getEmail())

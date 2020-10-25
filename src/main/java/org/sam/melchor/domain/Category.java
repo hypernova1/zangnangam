@@ -1,33 +1,36 @@
 package org.sam.melchor.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.sam.melchor.domain.audit.DateAudit;
+import org.sam.melchor.web.payload.CategoryDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Category extends DateAudit {
 
     @Id @GeneratedValue
     private Long id;
 
-    @NotNull
     private Integer orderNo;
 
-    @NotBlank
     private String name;
 
-    @NotBlank
     private String path;
 
-    @NotNull
     private String role;
 
-
+    public void update(CategoryDto request) {
+        this.orderNo = request.getOrderNo();
+        this.name = request.getName();
+        this.path = request.getPath();
+        this.role = request.getRole();
+    }
 }
+
