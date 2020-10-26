@@ -1,17 +1,18 @@
 package org.sam.melchor.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.sam.melchor.domain.audit.DateAudit;
-import org.sam.melchor.web.payload.CommentRequest;
+import org.sam.melchor.web.payload.CommentDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Comment extends DateAudit {
 
     @Id
@@ -19,28 +20,19 @@ public class Comment extends DateAudit {
     private Long id;
 
     @Lob
-    @NonNull
     private String content;
 
     @ManyToOne
     private Account writer;
 
     @ManyToOne
-    @NotNull
-    @JsonIgnore
     private Post post;
 
     private String nonMemberName;
     private String nonMemberPwd;
 
-    public static Comment setComment(CommentRequest commentRequest, Post post, Account writer) {
-        Comment comment = new Comment();
-        comment.setContent(commentRequest.getContent());
-        comment.setWriter(writer);
-        comment.setPost(post);
-        comment.setNonMemberName(commentRequest.getNonMemberName());
-        comment.setNonMemberPwd(commentRequest.getNonMemberPwd());
-        return comment;
+    public void update(CommentDto.Request request) {
+        this.content = request.getContent();
     }
 
 }

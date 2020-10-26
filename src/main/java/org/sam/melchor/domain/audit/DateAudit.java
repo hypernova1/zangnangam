@@ -24,12 +24,10 @@ public abstract class DateAudit {
     @CreatedDate
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-    @JsonIgnore
     private LocalDateTime created;
 
     @LastModifiedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-    @JsonIgnore
     private LocalDateTime updated;
 
 }

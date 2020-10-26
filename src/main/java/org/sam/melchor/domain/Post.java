@@ -1,10 +1,8 @@
 package org.sam.melchor.domain;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.sam.melchor.domain.audit.DateAudit;
-import org.sam.melchor.web.payload.PostRequest;
+import org.sam.melchor.web.payload.PostDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +11,9 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends DateAudit {
 
     @Id
@@ -22,14 +23,11 @@ public class Post extends DateAudit {
     @ManyToOne
     private Category category;
 
-    @NotBlank
     private String title;
 
-    @NotBlank
     @Lob
     private String content;
 
-    @NonNull
     @ManyToOne
     private Account writer;
 
@@ -43,20 +41,9 @@ public class Post extends DateAudit {
         comments.add(comment);
     }
 
-    public static Post set(PostRequest postRequest, Account account, Category category) {
-        Post post = new Post();
-        post.setCategory(category);
-        post.setTitle(postRequest.getTitle());
-        post.setContent(postRequest.getContent());
-        post.setWriter(account);
-        return post;
+    public void update(PostDto.UpdateRequest request, Category category) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.category = category;
     }
-
-    public static void modify(Post post, PostRequest postRequest, Account account, Category category) {
-        post.setCategory(category);
-        post.setTitle(postRequest.getTitle());
-        post.setContent(postRequest.getContent());
-        post.setWriter(account);
-    }
-
 }
