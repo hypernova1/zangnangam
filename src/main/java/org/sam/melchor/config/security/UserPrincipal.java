@@ -1,4 +1,4 @@
-package org.sam.melchor.security;
+package org.sam.melchor.config.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package org.sam.melchor.security;
+package org.sam.melchor.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.domain.Account;

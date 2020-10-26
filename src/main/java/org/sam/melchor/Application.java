@@ -46,38 +46,42 @@ public class Application {
 
 			accountRepository.save(account);
 
-			Category category1 = new Category();
-			category1.setOrderNo(0);
-			category1.setName("자바");
-			category1.setPath("java");
-			category1.setRole("all");
-			Category category2 = new Category();
-			category2.setOrderNo(1);
-			category2.setName("자바스크립트");
-			category2.setPath("js");
-			category2.setRole("all");
-			Category category3 = new Category();
-			category3.setOrderNo(2);
-			category3.setName("DB");
-			category3.setPath("db");
-			category3.setRole("all");
+			Category category1 = Category.builder()
+					.orderNo(0)
+					.name("자바")
+					.path("java")
+					.role("all")
+					.build();
+			Category category2 = Category.builder()
+					.orderNo(1)
+					.name("자바스크립트")
+					.path("js")
+					.role("all")
+					.build();
+			Category category3 = Category.builder()
+					.orderNo(2)
+					.name("DB")
+					.path("db")
+					.role("all")
+					.build();
 
 			categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
 
 			for(int i = 0; i <= 10; i++) {
-				Post post = new Post();
-				post.setCategory(category1);
-				post.setTitle("post" + i);
-				post.setContent("hello" + i);
-				post.setWriter(account);
-				post.setLikeCnt(0);
+				Post post = Post.builder()
+						.category(category1)
+						.title("post " + i)
+						.content("hello " + i)
+						.writer(account)
+						.build();
 				postRepository.save(post);
 
 				for (int j = 0; j < 5; j++) {
-					Comment comment = new Comment();
-					comment.setContent("Comment" + j);
-					comment.setWriter(account);
-					comment.setPost(post);
+					Comment comment = Comment.builder()
+							.content("comment " + j)
+							.writer(account)
+							.post(post)
+							.build();
 					commentRepository.save(comment);
 				}
 			}

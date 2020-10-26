@@ -13,6 +13,7 @@ import javax.persistence.Id;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class Category extends DateAudit {
 
     @Id @GeneratedValue

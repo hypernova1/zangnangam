@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Comment extends DateAudit {
 
     @Id

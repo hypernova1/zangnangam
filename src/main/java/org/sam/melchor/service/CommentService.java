@@ -11,7 +11,7 @@ import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;
-import org.sam.melchor.security.UserPrincipal;
+import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.web.payload.CommentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

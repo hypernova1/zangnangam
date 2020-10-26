@@ -1,9 +1,9 @@
 package org.sam.melchor.config;
 
 import lombok.RequiredArgsConstructor;
-import org.sam.melchor.security.CustomUserDetailService;
-import org.sam.melchor.security.JwtAuthenticationEntryPoint;
-import org.sam.melchor.security.JwtAuthenticationFilter;
+import org.sam.melchor.config.security.CustomUserDetailService;
+import org.sam.melchor.config.security.JwtAuthenticationEntryPoint;
+import org.sam.melchor.config.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

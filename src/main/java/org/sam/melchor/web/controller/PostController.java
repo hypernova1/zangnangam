@@ -1,8 +1,8 @@
 package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sam.melchor.security.AuthUser;
-import org.sam.melchor.security.UserPrincipal;
+import org.sam.melchor.config.security.AuthUser;
+import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.service.PostService;
 import org.sam.melchor.web.payload.PostDto;
 import org.springframework.http.ResponseEntity;

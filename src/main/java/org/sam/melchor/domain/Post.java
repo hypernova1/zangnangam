@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(callSuper = false)
 public class Post extends DateAudit {
 
     @Id
@@ -31,9 +32,9 @@ public class Post extends DateAudit {
     private Account writer;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private final List<Comment> comments = new ArrayList<>();
 
-    private Integer likeCnt;
+    private Long likeCnt;
 
     public void addComment(Comment comment) {
         comments.add(comment);

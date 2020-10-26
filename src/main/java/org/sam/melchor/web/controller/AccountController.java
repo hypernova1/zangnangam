@@ -2,8 +2,8 @@ package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.repository.AccountRepository;
-import org.sam.melchor.security.AuthUser;
-import org.sam.melchor.security.UserPrincipal;
+import org.sam.melchor.config.security.AuthUser;
+import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.service.AccountService;
 import org.sam.melchor.web.payload.AccountDto;
 import org.springframework.http.HttpStatus;

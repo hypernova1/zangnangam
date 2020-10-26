@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.repository.AccountRepository;
-import org.sam.melchor.security.UserPrincipal;
+import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.web.payload.AccountDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

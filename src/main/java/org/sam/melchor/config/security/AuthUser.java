@@ -1,4 +1,4 @@
-package org.sam.melchor.security;
+package org.sam.melchor.config.security;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
