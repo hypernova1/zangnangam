@@ -5,7 +5,6 @@ import org.sam.melchor.domain.audit.DateAudit;
 import org.sam.melchor.web.payload.PostDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class Post extends DateAudit {
     private Integer likeCnt;
 
     public void addComment(Comment comment) {
-        comment.setPost(this);
         comments.add(comment);
     }
 

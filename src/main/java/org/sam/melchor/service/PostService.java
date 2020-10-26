@@ -53,7 +53,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto.RegisterResponse registerPost(PostDto.RegisterRequest request, UserPrincipal authUser) {
+    public PostDto.DetailResponse registerPost(PostDto.RegisterRequest request, UserPrincipal authUser) {
         Category category = categories.findById(request.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
 
@@ -65,7 +65,7 @@ public class PostService {
                 .writer(account)
                 .build();
         Post savedPost = posts.save(post);
-        return modelMapper.map(savedPost, PostDto.RegisterResponse.class);
+        return modelMapper.map(savedPost, PostDto.DetailResponse.class);
     }
 
 

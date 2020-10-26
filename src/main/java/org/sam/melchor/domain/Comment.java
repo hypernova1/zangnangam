@@ -1,12 +1,10 @@
 package org.sam.melchor.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.sam.melchor.domain.audit.DateAudit;
 import org.sam.melchor.web.payload.CommentDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter

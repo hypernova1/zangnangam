@@ -25,21 +25,16 @@ public class Account extends DateAudit {
     private Long id;
 
     @Length(max = 30)
-    @NotBlank
     @Email(message = "이메일 형식이 맞지 않습니다.")
     @Column(unique = true)
     private String email;
 
     @Length(max = 20)
-    @NotBlank
     private String name;
 
-    @NotBlank
-    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "writer")
-    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany

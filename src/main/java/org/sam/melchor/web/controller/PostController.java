@@ -42,7 +42,7 @@ public class PostController {
             @Valid @RequestBody PostDto.RegisterRequest request,
             @AuthUser UserPrincipal authUser) {
 
-        PostDto.RegisterResponse postDto = postService.registerPost(request, authUser);
+        PostDto.DetailResponse postDto = postService.registerPost(request, authUser);
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")

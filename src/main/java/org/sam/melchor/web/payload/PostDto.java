@@ -52,34 +52,6 @@ public class PostDto {
     }
 
     @Getter @Setter
-    public static class RegisterResponse {
-
-        private Long id;
-        private String title;
-        private String content;
-        private Account writer;
-        private String created;
-        private Category category;
-        private List<CommentResponse> comments;
-
-        public void set(Post post) {
-            LocalDateTime date = post.getCreated();
-            String created = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-
-            this.id = post.getId();
-            this.title = post.getTitle();
-            this.content = post.getContent();
-            this.writer = post.getWriter();
-            this.setCategory(post.getCategory());
-            this.created = created;
-            CommentsResponse commentsResponse = new CommentsResponse();
-            commentsResponse.set(post.getComments());
-            this.comments = commentsResponse.getCommentList();
-        }
-
-    }
-
-    @Getter @Setter
     public static class ListResponse {
         private String categoryName;
         private List<SummaryResponse> postList;
