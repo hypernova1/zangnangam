@@ -20,12 +20,12 @@ public class JwtTokenProvider {
 
     public String generationToken(Authentication authentication) {
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        MemberAccount memberAccount = (MemberAccount) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(memberAccount.getAccount().getEmail())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

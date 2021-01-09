@@ -2,7 +2,7 @@ package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.config.security.AuthUser;
-import org.sam.melchor.config.security.UserPrincipal;
+import org.sam.melchor.domain.Account;
 import org.sam.melchor.service.CommentService;
 import org.sam.melchor.web.payload.CommentDto;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,9 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<?> createComment(@Valid @RequestBody CommentDto.Request request,
-                                                               @AuthUser UserPrincipal authUser) {
+                                                               @AuthUser Account account) {
 
-        if(authUser == null &&
+        if(account == null &&
                 (request.getNonMemberName() == null || request.getNonMemberPwd() == null)) {
             return ResponseEntity.badRequest().build();
         }
@@ -40,9 +40,9 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteComment(@PathVariable Long id,
                                            @Valid @RequestBody CommentDto.Request request,
-                                           @AuthUser UserPrincipal authUser) {
+                                           @AuthUser Account account) {
 
-        commentService.deleteComment(id, authUser);
+        commentService.deleteComment(id, account);
         List<CommentDto.Response> commentList = commentService.getCommentList(request.getPostId());
         return ResponseEntity.ok(commentList);
     }

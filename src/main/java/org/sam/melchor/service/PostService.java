@@ -5,13 +5,11 @@ import org.modelmapper.ModelMapper;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
-import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
-import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.web.payload.CommentDto;
 import org.sam.melchor.web.payload.PostDto;
 import org.springframework.data.domain.Page;
@@ -53,11 +51,10 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto.DetailResponse registerPost(PostDto.RegisterRequest request, UserPrincipal authUser) {
+    public PostDto.DetailResponse registerPost(PostDto.RegisterRequest request, Account account) {
         Category category = categories.findById(request.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
 
-        Account account = accounts.findById(authUser.getId()).orElseThrow(() -> new AccountNotFoundException(authUser.getId()));
         Post post = Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -89,8 +86,7 @@ public class PostService {
         return postDto;
     }
 
-    public void deletePost(Long id, UserPrincipal userPrincipal) {
-        Account account = accounts.findById(userPrincipal.getId()).orElseThrow(() -> new AccountNotFoundException(userPrincipal.getId()));
+    public void deletePost(Long id, Account account) {
         Long result = posts.deleteByIdAndWriter(id, account);
         if (result == 0) throw new PostNotFoundException(id);
     }

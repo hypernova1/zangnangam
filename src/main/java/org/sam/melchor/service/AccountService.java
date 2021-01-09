@@ -5,7 +5,6 @@ import org.modelmapper.ModelMapper;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.exception.AccountNotFoundException;
 import org.sam.melchor.repository.AccountRepository;
-import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.web.payload.AccountDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,16 +34,10 @@ public class AccountService {
         return modelMapper.map(account, AccountDto.UpdateResponse.class);
     }
 
-    public AccountDto.SummaryResponse getAccountSummary(Long id, UserPrincipal authUser) {
-        Account account = accounts.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        if (!account.getId().equals(authUser.getId())) {
-            return null;
-        }
-        boolean isAdmin = authUser.getAuthorities().stream()
-                .anyMatch((auth) -> auth.getAuthority().contains("ADMIN"));
-        String role = isAdmin ? "admin" : "user";
-        AccountDto.SummaryResponse userSummary = modelMapper.map(authUser, AccountDto.SummaryResponse.class);
-        userSummary.setRole(role);
+    public AccountDto.SummaryResponse getAccountSummary(Account account) {
+
+        AccountDto.SummaryResponse userSummary = modelMapper.map(account, AccountDto.SummaryResponse.class);
+        userSummary.setRole(account.isAdmin() ? "admin" : "user");
         return userSummary;
     }
 }

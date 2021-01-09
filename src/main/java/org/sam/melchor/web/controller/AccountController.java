@@ -1,9 +1,8 @@
 package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.config.security.AuthUser;
-import org.sam.melchor.config.security.UserPrincipal;
+import org.sam.melchor.domain.Account;
 import org.sam.melchor.service.AccountService;
 import org.sam.melchor.web.payload.AccountDto;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountRepository accountRepository;
     private final AccountService accountService;
 
     @GetMapping("/check_email/{email}")
@@ -37,10 +35,10 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     }
 
-    @GetMapping("/{id}/summary")
+    @GetMapping("/{id}")
     @Secured({"IS_AUTHENTICATED_ANONYMOUSLY"})
-    public ResponseEntity<?> getAuthUser(@PathVariable Long id, @AuthUser UserPrincipal authUser) {
-        AccountDto.SummaryResponse userSummary = accountService.getAccountSummary(id, authUser);
+    public ResponseEntity<?> getAuthUser(@PathVariable Long id, @AuthUser Account account) {
+        AccountDto.SummaryResponse userSummary = accountService.getAccountSummary(account);
         return ResponseEntity.ok(userSummary);
     }
 

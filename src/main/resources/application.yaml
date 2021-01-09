@@ -1,11 +1,10 @@
 server:
-#  ssl:
-#    enabled: true
-#    key-store: keystore.p12
-#    key-store-password: 111111
-#    key-store-type: PKCS12
-#    key-alias: zangnangam
-  port: 3300
+  ssl:
+    enabled: true
+    key-store: keystore.p12
+    key-store-password: 111111
+    key-store-type: PKCS12
+    key-alias: zangnangam
 
 spring:
   datasource:

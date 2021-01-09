@@ -2,7 +2,7 @@ package org.sam.melchor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sam.melchor.config.security.AuthUser;
-import org.sam.melchor.config.security.UserPrincipal;
+import org.sam.melchor.domain.Account;
 import org.sam.melchor.service.PostService;
 import org.sam.melchor.web.payload.PostDto;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +40,9 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> createPost(
             @Valid @RequestBody PostDto.RegisterRequest request,
-            @AuthUser UserPrincipal authUser) {
+            @AuthUser Account account) {
 
-        PostDto.DetailResponse postDto = postService.registerPost(request, authUser);
+        PostDto.DetailResponse postDto = postService.registerPost(request, account);
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
@@ -62,8 +62,8 @@ public class PostController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> removePost(@PathVariable Long id,
-                                              @AuthUser UserPrincipal userPrincipal) {
-        postService.deletePost(id, userPrincipal);
+                                              @AuthUser Account account) {
+        postService.deletePost(id, account);
         return ResponseEntity.ok().build();
     }
 

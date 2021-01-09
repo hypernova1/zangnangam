@@ -43,4 +43,9 @@ public class Account extends DateAudit {
         this.name = request.getName();
         this.password = request.getPassword();
     }
+
+    public boolean isAdmin() {
+        return this.roles.stream()
+                .anyMatch(role -> role.getName() == RoleName.ROLE_ADMIN);
+    }
 }

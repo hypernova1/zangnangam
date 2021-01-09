@@ -11,7 +11,6 @@ import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CommentRepository;
 import org.sam.melchor.repository.PostRepository;
-import org.sam.melchor.config.security.UserPrincipal;
 import org.sam.melchor.web.payload.CommentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,11 +61,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long id, UserPrincipal authUser) {
-        Account writer = accounts.findById(authUser.getId())
-                .orElseThrow(() -> new AccountNotFoundException(authUser.getEmail()));
-
-        comments.deleteByIdAndWriter(id, writer);
+    public void deleteComment(Long id, Account account) {
+        comments.deleteByIdAndWriter(id, account);
     }
 
     @Transactional
