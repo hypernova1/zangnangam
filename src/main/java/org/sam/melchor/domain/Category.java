@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode(callSuper = false)
 public class Category extends DateAudit {
 
@@ -26,6 +25,14 @@ public class Category extends DateAudit {
     private String path;
 
     private String role;
+
+    @Builder
+    public Category(Integer orderNo, String name, String path, String role) {
+        this.orderNo = orderNo;
+        this.name = name;
+        this.path = path;
+        this.role = role;
+    }
 
     public void update(CategoryDto request) {
         this.orderNo = request.getOrderNo();

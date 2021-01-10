@@ -29,7 +29,6 @@ public class Application {
 							   RoleRepository roleRepository,
 							   PasswordEncoder passwordEncoder) {
 		return args -> {
-
 			Role admin = new Role();
 			admin.setName(RoleName.ROLE_ADMIN);
 			Role user = new Role();

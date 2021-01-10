@@ -35,7 +35,6 @@ public class AccountService {
     }
 
     public AccountDto.SummaryResponse getAccountSummary(Account account) {
-
         AccountDto.SummaryResponse userSummary = modelMapper.map(account, AccountDto.SummaryResponse.class);
         userSummary.setRole(account.isAdmin() ? "admin" : "user");
         return userSummary;

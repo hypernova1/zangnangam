@@ -46,17 +46,20 @@ class PostControllerTest {
         accountRepository.save(account);
 
         for (int i = 0; i < 10; i++) {
-            Post post = new Post();
-            post.setContent("post" + i);
-            post.setTitle("title" + i);
-            post.setWriter(account);
-            post.setLikeCnt(i);
+            Post post = Post.builder()
+                    .content("post " + i)
+                    .title("title " + i)
+                    .writer(account)
+                    .likeCnt((long) i)
+                    .build();
             postRepository.save(post);
         }
 
-        Comment comment = new Comment();
-        comment.setWriter(account);
-        comment.setPost(postRepository.findById(11L).orElse(new Post()));
+        Post post = postRepository.findById(11L).orElse(Post.builder().build());
+        Comment comment = Comment.builder()
+                .writer(account)
+                .post(post)
+                .build();
         commentRepository.save(comment);
 
     }

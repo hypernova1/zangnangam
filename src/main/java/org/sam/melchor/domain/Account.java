@@ -11,7 +11,6 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -33,6 +32,13 @@ public class Account extends DateAudit {
 
     @ManyToMany
     private Set<Role> roles;
+
+    @Builder
+    public Account(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
 
     public void addPost(Post post) {
         post.setWriter(this);

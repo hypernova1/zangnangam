@@ -2,13 +2,13 @@ package org.sam.melchor.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.sam.melchor.config.security.JwtTokenProvider;
 import org.sam.melchor.domain.Account;
 import org.sam.melchor.domain.Role;
 import org.sam.melchor.domain.RoleName;
 import org.sam.melchor.exception.AppException;
 import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.RoleRepository;
-import org.sam.melchor.config.security.JwtTokenProvider;
 import org.sam.melchor.web.payload.AccountDto;
 import org.sam.melchor.web.payload.AuthDto;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.Collections;
 
 @Service
@@ -37,7 +36,7 @@ public class AuthService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public AccountDto.SummaryResponse signUp(AuthDto.@Valid SignUpRequest request) {
+    public AccountDto.SummaryResponse signUp(AuthDto.SignUpRequest request) {
         Account account = Account.builder()
                 .email(request.getEmail())
                 .name(request.getName())

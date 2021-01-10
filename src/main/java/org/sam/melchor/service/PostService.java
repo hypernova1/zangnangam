@@ -7,7 +7,6 @@ import org.sam.melchor.domain.Category;
 import org.sam.melchor.domain.Post;
 import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
-import org.sam.melchor.repository.AccountRepository;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
 import org.sam.melchor.web.payload.CommentDto;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository posts;
-    private final AccountRepository accounts;
     private final CategoryRepository categories;
     private final ModelMapper modelMapper;
 
