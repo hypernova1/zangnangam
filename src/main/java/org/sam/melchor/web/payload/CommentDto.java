@@ -23,7 +23,7 @@ public class CommentDto {
     public static class Response {
         private Long id;
         private String content;
-        private String writer;
+        private AccountDto.SummaryResponse writer;
         private String nonMemberName;
         private String nonMemberPwd;
         private String created;

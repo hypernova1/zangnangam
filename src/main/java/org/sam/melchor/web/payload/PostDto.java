@@ -46,6 +46,7 @@ public class PostDto {
     public static class DetailResponse {
         private Long id;
         private String title;
+        private AccountDto.SummaryResponse writer;
         private String content;
         private int LikeCnt;
         private List<CommentDto.Response> commentList;

@@ -9,6 +9,7 @@ import org.sam.melchor.exception.CategoryNotFoundException;
 import org.sam.melchor.exception.PostNotFoundException;
 import org.sam.melchor.repository.CategoryRepository;
 import org.sam.melchor.repository.PostRepository;
+import org.sam.melchor.web.payload.AccountDto;
 import org.sam.melchor.web.payload.CommentDto;
 import org.sam.melchor.web.payload.PostDto;
 import org.springframework.data.domain.Page;
@@ -75,11 +76,15 @@ public class PostService {
     public PostDto.DetailResponse getPost(Long id) {
         Post post = posts.findById(id).orElseThrow(() -> new PostNotFoundException(id));
         PostDto.DetailResponse postDto = modelMapper.map(post, PostDto.DetailResponse.class);
+        postDto.setWriter(modelMapper.map(post.getWriter(), AccountDto.SummaryResponse.class));
         List<CommentDto.Response> commentList = post.getComments()
                 .stream()
-                .map(comment -> modelMapper.map(comment, CommentDto.Response.class))
+                .map(comment -> {
+                    CommentDto.Response commentDto = modelMapper.map(comment, CommentDto.Response.class);
+                    commentDto.setWriter(modelMapper.map(comment.getWriter(), AccountDto.SummaryResponse.class));
+                    return commentDto;
+                })
                 .collect(Collectors.toList());
-
         postDto.setCommentList(commentList);
         return postDto;
     }
