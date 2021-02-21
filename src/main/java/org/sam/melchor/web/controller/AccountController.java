@@ -35,9 +35,9 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/me")
     @Secured({"IS_AUTHENTICATED_ANONYMOUSLY"})
-    public ResponseEntity<?> getAuthUser(@PathVariable Long id, @AuthUser Account account) {
+    public ResponseEntity<?> getAuthUser(@AuthUser Account account) {
         AccountDto.SummaryResponse userSummary = accountService.getAccountSummary(account);
         return ResponseEntity.ok(userSummary);
     }

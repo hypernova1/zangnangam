@@ -47,7 +47,7 @@ public class PostDto {
         private Long id;
         private String title;
         private String content;
-        private Integer LikeCnt;
+        private int LikeCnt;
         private List<CommentDto.Response> commentList;
     }
 

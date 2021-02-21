@@ -30,7 +30,7 @@ public class PostController {
         return ResponseEntity.ok(postList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{categoryPath}/{id}")
     public ResponseEntity<?> getPostDetail(@PathVariable Long id) {
 
         PostDto.DetailResponse postDto = postService.getPost(id);

@@ -18,7 +18,7 @@ public class Category extends DateAudit {
     @Id @GeneratedValue
     private Long id;
 
-    private Integer orderNo;
+    private int orderNo;
 
     private String name;
 
@@ -27,7 +27,7 @@ public class Category extends DateAudit {
     private String role;
 
     @Builder
-    public Category(Integer orderNo, String name, String path, String role) {
+    public Category(int orderNo, String name, String path, String role) {
         this.orderNo = orderNo;
         this.name = name;
         this.path = path;
